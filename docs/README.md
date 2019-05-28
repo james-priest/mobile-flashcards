@@ -4,7 +4,7 @@
 This site contains code notes for project 3 of my Udacity React Nanodegree project. Click the link below for more information on the course.
 - [Udacity's React Nanodegree Program](https://www.udacity.com/course/react-nanodegree--nd019)
 
-[![mfc2](assets/images/mfc2-small.jpg)](../assets/images/mfc2.jpg)<br>
+[![mfc2](assets/images/mfc2-small.jpg)](assets/images/mfc2.jpg)<br>
 <span class="center bold">App Mockup</span>
 
 ---
@@ -31,7 +31,7 @@ Here are the high-level requirements for this app.
 ### 1.3 Views
 The application should have five views. The Quiz View should change based on the data.
 
-[![mfc1](assets/images/mfc1-small.jpg)](../assets/images/mfc1.jpg)<br>
+[![mfc1](assets/images/mfc1-small.jpg)](assets/images/mfc1.jpg)<br>
 <span class="center bold">Views</span>
 
 Here are the views needed for this app.
