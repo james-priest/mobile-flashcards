@@ -209,3 +209,13 @@ The methods can then be tested by clicking each button.
 
 [![mfc4](assets/images/mfc4-small.jpg)](assets/images/mfc4.jpg)<br>
 <span class="center bold">API Tests</span>
+
+## 2. Views
+Here are screenshots of the initial views.
+
+### 2.1 DeckList
+
+[![mfc5](assets/images/mfc5-small.jpg)](assets/images/mfc5.jpg)<br>
+<span class="center bold">DeckList View</span>
+
+This view contains multiple Deck views.
