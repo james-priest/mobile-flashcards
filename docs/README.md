@@ -117,10 +117,95 @@ Effects of app on the data.
 - `title` is the title for the specific deck
 - `questions` is an array of questions and answers for that deck.
 
-#### 1.4.1 Helper Methods
+### 1.5 Helper Methods
 To manage your AsyncStorage database, you'll want to create four different helper methods.
 
 - `getDecks`: return all of the decks along with their titles, questions, and answers.
 - `getDeck`: take in a single id argument and return the deck associated with that id.
 - `saveDeckTitle`: take in a single title argument and add it to the decks.
 - `addCardToDeck`: take in two arguments, title and card, and will add the card to the list of questions for the deck with the associated title.
+
+#### 1.5.1 UI to Test API Methods
+I created the API methods and a UI to test with. 
+
+[![mfc3](assets/images/mfc3-small.jpg)](assets/images/mfc3.jpg)<br>
+<span class="center bold">API Tests</span>
+
+The methods are located in 'utils/api.js'
+
+```js
+import { AsyncStorage } from 'react-native';
+import { decks } from './_DATA';
+
+const DECKS_STORAGE_KEY = 'MobileFlashcards:decks';
+
+export async function getDecks() {
+  try {
+    const storeResults = await AsyncStorage.getItem(DECKS_STORAGE_KEY);
+
+    if (storeResults === null) {
+      AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks));
+    }
+
+    return storeResults === null ? desks : JSON.parse(storeResults);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getDeck(id) {
+  try {
+    const storeResults = await AsyncStorage.getItem(DECKS_STORAGE_KEY);
+
+    return JSON.parse(storeResults)[id];
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function saveDeckTitle(title) {
+  try {
+    await AsyncStorage.mergeItem(
+      DECKS_STORAGE_KEY,
+      JSON.stringify({
+        [title]: {
+          title,
+          questions: []
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function addCardToDeck(title, card) {
+  try {
+    const deck = await getDeck(title);
+
+    await AsyncStorage.mergeItem(
+      DECKS_STORAGE_KEY,
+      JSON.stringify({
+        [title]: {
+          questions: [...deck.questions].concat(card)
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function resetDecks() {
+  try {
+    await AsyncStorage.removeItem(DECKS_STORAGE_KEY);
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
+
+The methods can then be tested by clicking each button.
+
+[![mfc4](assets/images/mfc4-small.jpg)](assets/images/mfc4.jpg)<br>
+<span class="center bold">API Tests</span>
