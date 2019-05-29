@@ -126,7 +126,7 @@ To manage your AsyncStorage database, you'll want to create four different helpe
 - `addCardToDeck`: take in two arguments, title and card, and will add the card to the list of questions for the deck with the associated title.
 
 #### 1.5.1 UI to Test API Methods
-I created the API methods and a UI to test with. 
+I created the API methods and a UI to test with.
 
 [![mfc3](assets/images/mfc3-small.jpg)](assets/images/mfc3.jpg)<br>
 <span class="center bold">API Tests</span>
@@ -219,3 +219,8 @@ Here are screenshots of the initial views.
 <span class="center bold">DeckList View</span>
 
 This view contains multiple Deck views.
+
+### 2.2 AddDeck
+
+[![mfc6](assets/images/mfc6-small.jpg)](assets/images/mfc6.jpg)<br>
+<span class="center bold">AddDeck View</span>
