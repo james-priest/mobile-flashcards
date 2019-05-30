@@ -1,14 +1,18 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import DeckList from './components/DeckList';
 import AddDeck from './components/AddDeck';
 import DeckDetail from './components/DeckDetail';
+import AddCard from './components/AddCard';
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        {/* <DeckList /> */}
         {/* <AddDeck /> */}
-        <DeckDetail />
+        {/* <DeckDetail /> */}
+        <AddCard />
       </View>
     );
   }
