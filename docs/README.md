@@ -230,3 +230,7 @@ This view contains multiple instances of the Deck component.
 [![mfc7](assets/images/mfc7-small.jpg)](assets/images/mfc7.jpg)<br>
 <span class="center bold">DeckDetail View</span>
 
+<!-- ### 2.4 AddCard
+
+[![mfc8](assets/images/mfc8-small.jpg)](assets/images/mfc8.jpg)<br>
+<span class="center bold">AddCard View</span> -->
