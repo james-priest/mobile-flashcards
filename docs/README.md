@@ -126,7 +126,7 @@ To manage your AsyncStorage database, you'll want to create four different helpe
 - `addCardToDeck`: take in two arguments, title and card, and will add the card to the list of questions for the deck with the associated title.
 
 #### 1.5.1 UI to Test API Methods
-I created the API methods and a UI to test with. 
+I created the API methods and a UI to test with.
 
 [![mfc3](assets/images/mfc3-small.jpg)](assets/images/mfc3.jpg)<br>
 <span class="center bold">API Tests</span>
@@ -209,3 +209,28 @@ The methods can then be tested by clicking each button.
 
 [![mfc4](assets/images/mfc4-small.jpg)](assets/images/mfc4.jpg)<br>
 <span class="center bold">API Tests</span>
+
+## 2. Views
+Here are screenshots of the initial views.
+
+### 2.1 DeckList
+
+[![mfc5](assets/images/mfc5-small.jpg)](assets/images/mfc5.jpg)<br>
+<span class="center bold">DeckList View</span>
+
+This view contains multiple instances of the Deck component.
+
+### 2.2 AddDeck
+
+[![mfc6](assets/images/mfc6-small.jpg)](assets/images/mfc6.jpg)<br>
+<span class="center bold">AddDeck View</span>
+
+### 2.3 DeckDetail
+
+[![mfc7](assets/images/mfc7-small.jpg)](assets/images/mfc7.jpg)<br>
+<span class="center bold">DeckDetail View</span>
+
+<!-- ### 2.4 AddCard
+
+[![mfc8](assets/images/mfc8-small.jpg)](assets/images/mfc8.jpg)<br>
+<span class="center bold">AddCard View</span> -->
