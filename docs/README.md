@@ -218,9 +218,15 @@ Here are screenshots of the initial views.
 [![mfc5](assets/images/mfc5-small.jpg)](assets/images/mfc5.jpg)<br>
 <span class="center bold">DeckList View</span>
 
-This view contains multiple Deck views.
+This view contains multiple instances of the Deck component.
 
 ### 2.2 AddDeck
 
 [![mfc6](assets/images/mfc6-small.jpg)](assets/images/mfc6.jpg)<br>
 <span class="center bold">AddDeck View</span>
+
+### 2.3 DeckDetail
+
+[![mfc7](assets/images/mfc7-small.jpg)](assets/images/mfc7.jpg)<br>
+<span class="center bold">DeckDetail View</span>
+
