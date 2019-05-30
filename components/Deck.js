@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   deckContainer: {
     // flex: 1,
     alignItems: 'center',
-    // borderWidth: 1,
-    // borderColor: 'red',
+    borderWidth: 1,
+    borderColor: 'orange',
     flexBasis: 120
   },
   deckText: {

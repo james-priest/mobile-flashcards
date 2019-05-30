@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity
-} from 'react-native';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
+import TouchButton from './TouchButton';
 
 export class AddDeck extends Component {
   state = {
@@ -20,19 +15,19 @@ export class AddDeck extends Component {
         <View style={styles.block}>
           <Text style={styles.title}>What is the title of your new deck?</Text>
         </View>
-        <View style={styles.block}>
+        <View style={[styles.block]}>
           <TextInput
             style={styles.input}
             value={this.state.value}
             onChangeText={this.handleChange}
           />
         </View>
-        {/* <View style={{ flex: 1 }} /> */}
-        <View style={[styles.block, styles.btnContainer]}>
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Create Deck</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchButton
+          btnStyle={{ backgroundColor: 'gray' }}
+          onPress={() => console.log('deck created')}
+        >
+          Create Deck
+        </TouchButton>
       </View>
     );
   }
@@ -40,8 +35,11 @@ export class AddDeck extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // borderWidth: 1,
-    // borderColor: 'red'
+    // flex: 1,
+    borderWidth: 1,
+    borderColor: 'red'
+    // alignItems: 'stretch',
+    // textAlign: 'center'
   },
   block: {
     marginBottom: 20
@@ -59,24 +57,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 20,
     height: 40
-  },
-  btnContainer: {
-    // flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  btn: {
-    width: 200,
-    height: 50,
-    backgroundColor: 'red',
-    borderRadius: 5,
-    justifyContent: `center`,
-    alignItems: `center`
-  },
-  btnText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white'
   }
 });
 
