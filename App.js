@@ -4,6 +4,7 @@ import DeckList from './components/DeckList';
 import AddDeck from './components/AddDeck';
 import DeckDetail from './components/DeckDetail';
 import AddCard from './components/AddCard';
+import Quiz from './components/Quiz';
 
 export default class App extends React.Component {
   render() {
@@ -12,7 +13,8 @@ export default class App extends React.Component {
         {/* <DeckList /> */}
         {/* <AddDeck /> */}
         {/* <DeckDetail /> */}
-        <AddCard />
+        {/* <AddCard /> */}
+        <Quiz />
       </View>
     );
   }
