@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
     // flex: 1,
     // justifyContent: 'flex-end',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'blue',
+    // borderWidth: 1,
+    // borderColor: 'blue',
     marginBottom: 20
   },
   btn: {

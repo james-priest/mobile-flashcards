@@ -230,7 +230,18 @@ This view contains multiple instances of the Deck component.
 [![mfc7](assets/images/mfc7-small.jpg)](assets/images/mfc7.jpg)<br>
 <span class="center bold">DeckDetail View</span>
 
-<!-- ### 2.4 AddCard
+### 2.4 AddCard
 
 [![mfc8](assets/images/mfc8-small.jpg)](assets/images/mfc8.jpg)<br>
-<span class="center bold">AddCard View</span> -->
+<span class="center bold">AddCard View</span>
+
+### 2.5 Quiz
+
+[![mfc9](assets/images/mfc9-small.jpg)](assets/images/mfc9.jpg)<br>
+<span class="center bold">Quiz View - Question</span>
+
+[![mfc10](assets/images/mfc10-small.jpg)](assets/images/mfc10.jpg)<br>
+<span class="center bold">Quiz View - Answer</span>
+
+[![mfc11](assets/images/mfc11-small.jpg)](assets/images/mfc11.jpg)<br>
+<span class="center bold">Quiz View - Results</span>

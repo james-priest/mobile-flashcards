@@ -23,7 +23,7 @@ export class AddDeck extends Component {
           />
         </View>
         <TouchButton
-          btnStyle={{ backgroundColor: 'gray' }}
+          btnStyle={{ backgroundColor: 'red' }}
           onPress={() => console.log('deck created')}
         >
           Create Deck
