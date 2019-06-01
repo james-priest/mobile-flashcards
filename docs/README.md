@@ -245,3 +245,24 @@ This view contains multiple instances of the Deck component.
 
 [![mfc11](assets/images/mfc11-small.jpg)](assets/images/mfc11.jpg)<br>
 <span class="center bold">Quiz View - Results</span>
+
+## 3. Navigation
+### 3.1 Decks Tab
+
+[![mfc12](assets/images/mfc12-small.jpg)](assets/images/mfc12.jpg)<br>
+<span class="center bold">Tab Navigator - DeckList</span>
+
+### 3.2 Add Deck Tab
+
+[![mfc15](assets/images/mfc15-small.jpg)](assets/images/mfc15.jpg)<br>
+<span class="center bold">Tab Navigator - AddDeck</span>
+
+### 3.3 Deck Details Navigator
+
+[![mfc13](assets/images/mfc13-small.jpg)](assets/images/mfc13.jpg)<br>
+<span class="center bold">Stack Navigator - DeckDetails</span>
+
+<!-- ### 3.4 AddCard Navigator
+
+[![mfc14](assets/images/mfc14-small.jpg)](assets/images/mfc14.jpg)<br>
+<span class="center bold">Stack Navigator - AddCard</span> -->

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import TouchButton from './TouchButton';
+import { gray, green } from '../utils/colors';
 
 export class AddDeck extends Component {
   state = {
@@ -12,6 +13,7 @@ export class AddDeck extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={{ height: 60 }} />
         <View style={styles.block}>
           <Text style={styles.title}>What is the title of your new deck?</Text>
         </View>
@@ -23,7 +25,7 @@ export class AddDeck extends Component {
           />
         </View>
         <TouchButton
-          btnStyle={{ backgroundColor: 'red' }}
+          btnStyle={{ backgroundColor: green }}
           onPress={() => console.log('deck created')}
         >
           Create Deck
@@ -35,11 +37,15 @@ export class AddDeck extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    borderWidth: 1,
-    borderColor: 'red'
-    // alignItems: 'stretch',
-    // textAlign: 'center'
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    backgroundColor: gray
+    // borderWidth: 1,
+    // borderColor: 'red'
+    // justifyContent: 'center'
   },
   block: {
     marginBottom: 20
@@ -56,7 +62,8 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderRadius: 5,
     fontSize: 20,
-    height: 40
+    height: 40,
+    marginBottom: 20
   }
 });
 
