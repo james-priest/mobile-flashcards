@@ -11,8 +11,8 @@ const screen = {
 
 export class Quiz extends Component {
   state = {
-    // screen: screen.QUESTION
-    screen: screen.RESULT
+    screen: screen.QUESTION
+    // screen: screen.RESULT
   };
   render() {
     switch (this.state.screen) {
