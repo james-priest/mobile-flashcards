@@ -262,7 +262,21 @@ This view contains multiple instances of the Deck component.
 [![mfc13](assets/images/mfc13-small.jpg)](assets/images/mfc13.jpg)<br>
 <span class="center bold">Stack Navigator - DeckDetails</span>
 
-<!-- ### 3.4 AddCard Navigator
+### 3.4 AddCard Navigator
 
 [![mfc14](assets/images/mfc14-small.jpg)](assets/images/mfc14.jpg)<br>
-<span class="center bold">Stack Navigator - AddCard</span> -->
+<span class="center bold">Stack Navigator - AddCard</span>
+
+### 3.5 Quiz Navigator
+
+[![mfc16](assets/images/mfc16-small.jpg)](assets/images/mfc16.jpg)<br>
+<span class="center bold">Stack Navigator - Quiz Question</span>
+
+[![mfc17](assets/images/mfc17-small.jpg)](assets/images/mfc17.jpg)<br>
+<span class="center bold">Stack Navigator - Quiz Answer</span>
+
+[![mfc19](assets/images/mfc19-small.jpg)](assets/images/mfc19.jpg)<br>
+<span class="center bold">Stack Navigator - Quiz Passing</span>
+
+[![mfc18](assets/images/mfc18-small.jpg)](assets/images/mfc18.jpg)<br>
+<span class="center bold">Stack Navigator - Quiz Failing</span>
