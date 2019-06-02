@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Deck from './Deck';
-import { gray } from '../utils/colors';
+import { gray, green } from '../utils/colors';
 
 export class DeckList extends Component {
   static propTypes = {
@@ -10,7 +10,7 @@ export class DeckList extends Component {
   };
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.title}>Mobile Flashcards</Text>
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('DeckDetail')}
@@ -27,7 +27,13 @@ export class DeckList extends Component {
         >
           <Deck />
         </TouchableOpacity>
-      </View>
+        {/* <TouchableOpacity
+          style={{ marginBottom: 30 }}
+          onPress={() => this.props.navigation.navigate('DeckDetail')}
+        >
+          <Deck />
+        </TouchableOpacity> */}
+      </ScrollView>
     );
   }
 }
@@ -45,7 +51,8 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: 'center',
     marginBottom: 16,
-    color: 'darkgreen'
+    color: green,
+    textDecorationLine: 'underline'
   }
 });
 
