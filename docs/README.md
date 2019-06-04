@@ -454,6 +454,9 @@ const styles = StyleSheet.create({
 ### 4.4 Entry Point
 Now we can connect Redux up to our initial component. This is in './components/DeckList.js'.
 
+[![mfc21](assets/images/mfc21-small.jpg)](assets/images/mfc21.jpg)<br>
+<span class="center bold">Updated Home Screen</span>
+
 ```jsx
 // DeckList.js
 import React, { Component } from 'react';
@@ -522,8 +525,8 @@ export default connect(
 )(DeckList);
 ```
 
-### 4.5 Settings Tab
+<!-- ### 4.5 Settings Tab
 A settings tab has been added that allows AsyncStorage to be reset back to the original data set.
 
 [![mfc20](assets/images/mfc20-small.jpg)](assets/images/mfc20.jpg)<br>
-<span class="center bold">Settings Tab</span>
+<span class="center bold">Settings Tab</span> -->
