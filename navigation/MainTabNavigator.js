@@ -11,6 +11,7 @@ import AddDeck from '../components/AddDeck';
 import DeckDetail from '../components/DeckDetail';
 import AddCard from '../components/AddCard';
 import Quiz from '../components/Quiz';
+import Settings from '../components/Settings';
 
 import { darkGray, white, green, lightGreen } from '../utils/colors';
 
@@ -36,6 +37,15 @@ const routeConfigs = {
       tabBarLabel: 'Add Deck',
       tabBarIcon: ({ tintColor }) => (
         <Icon.FontAwesome name="plus-square" size={30} color={tintColor} />
+      )
+    }
+  },
+  Settings: {
+    screen: Settings,
+    navigationOptions: {
+      tabBarLabel: 'Settings',
+      tabBarIcon: ({ tintColor }) => (
+        <Icon.FontAwesome name="sliders" size={30} color={tintColor} />
       )
     }
   }
