@@ -147,7 +147,7 @@ export async function getDecks() {
       AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks));
     }
 
-    return storeResults === null ? desks : JSON.parse(storeResults);
+    return storeResults === null ? decks : JSON.parse(storeResults);
   } catch (err) {
     console.log(err);
   }
@@ -174,6 +174,18 @@ export async function saveDeckTitle(title) {
         }
       })
     );
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function removeDeck(key) {
+  try {
+    const results = await AsyncStorage.getItem(DECKS_STORAGE_KEY);
+    const data = JSON.parse(results);
+    data[key] = undefined;
+    delete data[key];
+    AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data));
   } catch (err) {
     console.log(err);
   }
@@ -280,3 +292,239 @@ This view contains multiple instances of the Deck component.
 
 [![mfc18](assets/images/mfc18-small.jpg)](assets/images/mfc18.jpg)<br>
 <span class="center bold">Stack Navigator - Quiz Failing</span>
+
+## 4. Redux
+The next step was to add in all the redux pieces.
+
+### 4.1 Actions
+The actions is in './actions/index.js'.
+
+```js
+// index.js
+import { getDecks } from '../utils/api';
+
+export const RECEIVE_DECKS = 'RECEIVE_DECKS';
+export const ADD_DECK = 'ADD_DECK';
+export const REMOVE_DECK = 'REMOVE_DECK';
+export const ADD_CARD = 'ADD_CARD';
+
+export function receiveDecks(decks) {
+  return {
+    type: RECEIVE_DECKS,
+    decks
+  };
+}
+
+export function addDeck(title) {
+  return {
+    type: ADD_DECK,
+    title
+  };
+}
+
+export function removeDeck(id) {
+  return {
+    type: REMOVE_DECK,
+    id
+  };
+}
+
+export function addQuestion(id, card) {
+  return {
+    type: ADD_CARD,
+    id,
+    card
+  };
+}
+
+export function handleInitialData() {
+  return dispatch => {
+    return getDecks().then(decks => {
+      dispatch(receiveDecks(decks));
+    });
+  };
+}
+```
+
+### 4.2 Reducers
+This is in './reducers/index.js'.
+
+```js
+// index.js
+import { getDecks } from '../utils/api';
+
+export const RECEIVE_DECKS = 'RECEIVE_DECKS';
+export const ADD_DECK = 'ADD_DECK';
+export const REMOVE_DECK = 'REMOVE_DECK';
+export const ADD_CARD = 'ADD_CARD';
+
+export function receiveDecks(decks) {
+  return {
+    type: RECEIVE_DECKS,
+    decks
+  };
+}
+
+export function addDeck(title) {
+  return {
+    type: ADD_DECK,
+    title
+  };
+}
+
+export function removeDeck(id) {
+  return {
+    type: REMOVE_DECK,
+    id
+  };
+}
+
+export function addQuestion(id, card) {
+  return {
+    type: ADD_CARD,
+    id,
+    card
+  };
+}
+
+export function handleInitialData() {
+  return dispatch => {
+    return getDecks().then(decks => {
+      dispatch(receiveDecks(decks));
+    });
+  };
+}
+```
+
+### 4.3 Store Provider
+The next step was to add the Provider code to './App.js'.
+
+```jsx
+// App.js
+import React from 'react';
+import PropTypes from 'prop-types';
+import { StyleSheet, View, StatusBar } from 'react-native';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import { Provider } from 'react-redux';
+import reducer from './reducers/index';
+import { Constants } from 'expo';
+import AppNavigator from './navigation/AppNavigator';
+
+const store = createStore(
+  reducer,
+  applyMiddleware(thunk, logger)
+);
+
+function FlashcardStatusBar({ backgroundColor, ...props }) {
+  return ({% raw %}
+    <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    </View>{% endraw %}
+  );
+}
+FlashcardStatusBar.propTypes = {
+  backgroundColor: PropTypes.string.isRequired
+};
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <View style={styles.container}>
+          <FlashcardStatusBar
+            backgroundColor="green"
+            barStyle="light-content"
+          />
+          <AppNavigator />
+        </View>
+      </Provider>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#dde'
+  }
+});
+```
+
+### 4.4 Entry Point
+Now we can connect Redux up to our initial component. This is in './components/DeckList.js'.
+
+```jsx
+// DeckList.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import Deck from './Deck';
+import { gray, green } from '../utils/colors';
+import { handleInitialData } from '../actions/index';
+
+export class DeckList extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    handleInitialData: PropTypes.func.isRequired,
+    decks: PropTypes.object.isRequired
+  };
+  componentDidMount() {
+    this.props.handleInitialData();
+  }
+  render() {
+    const { decks } = this.props;
+
+    return (
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Mobile Flashcards</Text>
+        {Object.values(decks).map(deck => {
+          return (
+            <TouchableOpacity
+              key={deck.title}
+              onPress={() =>
+                this.props.navigation.navigate('DeckDetail', { deck: deck })
+              }
+            >
+              <Deck deck={deck} />
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    backgroundColor: gray
+  },
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginBottom: 16,
+    color: green,
+    textDecorationLine: 'underline'
+  }
+});
+
+const mapStateToProps = decks => ({ decks });
+
+export default connect(
+  mapStateToProps,
+  { handleInitialData }
+)(DeckList);
+```
+
+### 4.5 Settings Tab
+A settings tab has been added that allows AsyncStorage to be reset back to the original data set.
+
+[![mfc20](assets/images/mfc20-small.jpg)](assets/images/mfc20.jpg)<br>
+<span class="center bold">Settings Tab</span>
