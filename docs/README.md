@@ -351,48 +351,47 @@ This is in './reducers/index.js'.
 
 ```js
 // index.js
-import { getDecks } from '../utils/api';
+import {
+  RECEIVE_DECKS,
+  ADD_DECK,
+  REMOVE_DECK,
+  ADD_CARD
+} from '../actions/index';
+// import { decks as INITIAL_STATE } from '../utils/_DATA';
 
-export const RECEIVE_DECKS = 'RECEIVE_DECKS';
-export const ADD_DECK = 'ADD_DECK';
-export const REMOVE_DECK = 'REMOVE_DECK';
-export const ADD_CARD = 'ADD_CARD';
-
-export function receiveDecks(decks) {
-  return {
-    type: RECEIVE_DECKS,
-    decks
-  };
-}
-
-export function addDeck(title) {
-  return {
-    type: ADD_DECK,
-    title
-  };
-}
-
-export function removeDeck(id) {
-  return {
-    type: REMOVE_DECK,
-    id
-  };
-}
-
-export function addQuestion(id, card) {
-  return {
-    type: ADD_CARD,
-    id,
-    card
-  };
-}
-
-export function handleInitialData() {
-  return dispatch => {
-    return getDecks().then(decks => {
-      dispatch(receiveDecks(decks));
-    });
-  };
+export default function decks(state = {}, action) {
+  switch (action.type) {
+    case RECEIVE_DECKS:
+      return {
+        ...state,
+        ...action.decks
+      };
+    case ADD_DECK:
+      const { title } = action;
+      return {
+        ...state,
+        [title]: {
+          title,
+          questions: []
+        }
+      };
+    case REMOVE_DECK:
+      const { id } = action;
+      // return ({ [id]: value, ...remainingDecks } = state);
+      const { [id]: value, ...remainingDecks } = state;
+      console.log(remainingDecks);
+      return remainingDecks;
+    case ADD_CARD:
+      const { deckId, card } = action;
+      return {
+        ...state,
+        [deckId]: {
+          questions: [...state[deckId].questions].concat(card)
+        }
+      };
+    default:
+      return state;
+  }
 }
 ```
 
