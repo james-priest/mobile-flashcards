@@ -1,8 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, StatusBar } from 'react-native';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import { Provider } from 'react-redux';
+import reducer from './reducers/index';
 import { Constants } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+
+const store = createStore(
+  reducer /* preloadedState, */,
+  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  applyMiddleware(thunk, logger)
+);
 
 function FlashcardStatusBar({ backgroundColor, ...props }) {
   return (
@@ -18,10 +29,15 @@ FlashcardStatusBar.propTypes = {
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <FlashcardStatusBar backgroundColor="green" barStyle="light-content" />
-        <AppNavigator />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <FlashcardStatusBar
+            backgroundColor="green"
+            barStyle="light-content"
+          />
+          <AppNavigator />
+        </View>
+      </Provider>
     );
   }
 }
