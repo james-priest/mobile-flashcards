@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native';
 import { connect } from 'react-redux';
 import Deck from './Deck';
 import { gray, green } from '../utils/colors';
@@ -26,17 +32,15 @@ export class DeckList extends Component {
             <TouchableOpacity
               key={deck.title}
               onPress={() => navigation.navigate('DeckDetail', { deck: deck })}
+              // onPress={() =>
+              //   navigation.navigate('DeckDetail', { title: deck.title })
+              // }
             >
               <Deck deck={deck} />
             </TouchableOpacity>
           );
         })}
-        {/* <TouchableOpacity
-          style={{ marginBottom: 30 }}
-          onPress={() => this.props.navigation.navigate('DeckDetail')}
-        >
-          <Deck />
-        </TouchableOpacity> */}
+        <View style={{ marginBottom: 30 }} />
       </ScrollView>
     );
   }
@@ -56,7 +60,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
     color: green
-    // textDecorationLine: 'underline'
   }
 });
 
