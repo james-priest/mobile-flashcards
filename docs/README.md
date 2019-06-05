@@ -525,6 +525,103 @@ export default connect(
 )(DeckList);
 ```
 
+## 5. Wire-up components
+### 5.1  Add Deck
+
+[![mfc22](assets/images/mfc22-small.jpg)](assets/images/mfc22.jpg)<br>
+<span class="center bold">Add Deck</span>
+
+```jsx
+// AddDeck.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
+import TouchButton from './TouchButton';
+import { gray, green, white, textGray } from '../utils/colors';
+import { connect } from 'react-redux';
+import { addDeck } from '../actions/index';
+
+export class AddDeck extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    addDeck: PropTypes.func.isRequired
+  };
+  state = {
+    text: ''
+  };
+  handleChange = text => {
+    this.setState({ text });
+  };
+  handleSubmit = () => {
+    const { addDeck, navigation } = this.props;
+
+    addDeck(this.state.text);
+    this.setState(() => ({ text: '' }));
+    navigation.goBack();
+  };
+  render() {
+    return (
+      <View style={styles.container}>{% raw %}
+        <View style={{ height: 60 }} />
+        <View style={styles.block}>
+          <Text style={styles.title}>What is the title of your new deck?</Text>
+        </View>
+        <View style={[styles.block]}>
+          <TextInput
+            style={styles.input}
+            value={this.state.text}
+            onChangeText={this.handleChange}
+          />
+        </View>
+        <TouchButton
+          btnStyle={{ backgroundColor: green, borderColor: white }}
+          onPress={this.handleSubmit}
+        >
+          Create Deck
+        </TouchButton>{% endraw %}
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    backgroundColor: gray
+  },
+  block: {
+    marginBottom: 20
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 32
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: textGray,
+    backgroundColor: white,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 5,
+    fontSize: 20,
+    height: 40,
+    marginBottom: 20
+  }
+});
+
+export default connect(
+  null,
+  { addDeck }
+)(AddDeck);
+```
+
+[![mfc23](assets/images/mfc23-small.jpg)](assets/images/mfc23.jpg)<br>
+<span class="center bold">Added Deck</span>
+
 <!-- ### 4.5 Settings Tab
 A settings tab has been added that allows AsyncStorage to be reset back to the original data set.
 
