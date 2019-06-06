@@ -592,10 +592,10 @@ export default connect(mapStateToProps)(Deck);
 ### 5.1  Add Deck
 
 [![mfc24](assets/images/mfc24-small.jpg)](assets/images/mfc24.jpg)<br>
-<span class="center bold">Added Deck with validation</span>
+<span class="center bold">Add Deck with disabled submit</span>
 
 [![mfc22](assets/images/mfc22-small.jpg)](assets/images/mfc22.jpg)<br>
-<span class="center bold">Add Deck</span>
+<span class="center bold">Add Deck with validation</span>
 
 ```jsx
 // AddDeck.js
@@ -628,7 +628,7 @@ export class AddDeck extends Component {
   };
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container}>{% raw %}
         <View style={{ height: 60 }} />
         <View style={styles.block}>
           <Text style={styles.title}>What is the title of your new deck?</Text>
@@ -646,7 +646,7 @@ export class AddDeck extends Component {
           disabled={this.state.text === ''}
         >
           Create Deck
-        </TouchButton>
+        </TouchButton>{% endraw %}
       </View>
     );
   }
@@ -688,7 +688,7 @@ export default connect(
 ```
 
 [![mfc23](assets/images/mfc23-small.jpg)](assets/images/mfc23.jpg)<br>
-<span class="center bold">Added Deck</span>
+<span class="center bold">Deck Added</span>
 
 <!-- ### 4.5 Settings Tab
 A settings tab has been added that allows AsyncStorage to be reset back to the original data set.
