@@ -31,12 +31,13 @@ export class DeckList extends Component {
           return (
             <TouchableOpacity
               key={deck.title}
-              onPress={() => navigation.navigate('DeckDetail', { deck: deck })}
-              // onPress={() =>
-              //   navigation.navigate('DeckDetail', { title: deck.title })
-              // }
+              // onPress={() => navigation.navigate('DeckDetail', { deck: deck })}
+              onPress={() =>
+                navigation.navigate('DeckDetail', { title: deck.title })
+              }
             >
-              <Deck deck={deck} />
+              {/* <Deck deck={deck} /> */}
+              <Deck id={deck.title} />
             </TouchableOpacity>
           );
         })}
