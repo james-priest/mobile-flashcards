@@ -332,7 +332,7 @@ export function removeDeck(id) {
 export function addQuestion(id, card) {
   return {
     type: ADD_CARD,
-    id,
+    deckId,
     card
   };
 }
@@ -386,6 +386,7 @@ export default function decks(state = {}, action) {
       return {
         ...state,
         [deckId]: {
+          ...state[deckId],
           questions: [...state[deckId].questions].concat(card)
         }
       };
@@ -457,6 +458,8 @@ Now we can connect Redux up to our initial component. This is in './components/D
 [![mfc21](assets/images/mfc21-small.jpg)](assets/images/mfc21.jpg)<br>
 <span class="center bold">Updated Home Screen</span>
 
+#### 4.4.1 DeckList Component
+
 ```jsx
 // DeckList.js
 import React, { Component } from 'react';
@@ -477,7 +480,7 @@ export class DeckList extends Component {
     this.props.handleInitialData();
   }
   render() {
-    const { decks } = this.props;
+    const { decks, navigation } = this.props;
 
     return (
       <ScrollView style={styles.container}>
@@ -487,10 +490,10 @@ export class DeckList extends Component {
             <TouchableOpacity
               key={deck.title}
               onPress={() =>
-                this.props.navigation.navigate('DeckDetail', { deck: deck })
+                navigation.navigate('DeckDetail', { title: deck.title })
               }
             >
-              <Deck deck={deck} />
+              <Deck id={deck.title} />
             </TouchableOpacity>
           );
         })}
@@ -512,8 +515,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: 'center',
     marginBottom: 16,
-    color: green,
-    textDecorationLine: 'underline'
+    color: green
   }
 });
 
@@ -524,6 +526,169 @@ export default connect(
   { handleInitialData }
 )(DeckList);
 ```
+
+#### 4.4.2 Deck Component
+The Decks component is located in './components/Deck.js'. It looks like this.
+
+```jsx
+// Deck.js
+import React from 'react';
+import PropTypes from 'prop-types';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { white, textGray } from '../utils/colors';
+import { connect } from 'react-redux';
+
+const Deck = props => {
+  const { deck } = props;
+
+  return (
+    <View style={styles.deckContainer}>
+      <View>
+        <Text style={styles.deckText}>{deck.title}</Text>
+      </View>
+      <View>
+        <Text style={styles.cardText}>{deck.questions.length} cards</Text>
+      </View>
+    </View>
+  );
+};
+Deck.propTypes = {
+  deck: PropTypes.object.isRequired
+};
+
+const styles = StyleSheet.create({
+  deckContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexBasis: 120,
+    minHeight: 120,
+    borderWidth: 1,
+    borderColor: '#aaa',
+    backgroundColor: white,
+    borderRadius: 5,
+    marginBottom: 10
+  },
+  deckText: {
+    fontSize: 28
+  },
+  cardText: {
+    fontSize: 18,
+    color: textGray
+  }
+});
+
+const mapStateToProps = (state, { id }) => {
+  const deck = state[id];
+
+  return {
+    deck
+  };
+};
+
+export default connect(mapStateToProps)(Deck);
+```
+
+## 5. Wire-up components
+### 5.1  Add Deck
+
+[![mfc24](assets/images/mfc24-small.jpg)](assets/images/mfc24.jpg)<br>
+<span class="center bold">Add Deck with disabled submit</span>
+
+[![mfc22](assets/images/mfc22-small.jpg)](assets/images/mfc22.jpg)<br>
+<span class="center bold">Add Deck with validation</span>
+
+```jsx
+// AddDeck.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
+import TouchButton from './TouchButton';
+import { gray, green, white, textGray } from '../utils/colors';
+import { connect } from 'react-redux';
+import { addDeck } from '../actions/index';
+
+export class AddDeck extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    addDeck: PropTypes.func.isRequired
+  };
+  state = {
+    text: ''
+  };
+  handleChange = text => {
+    this.setState({ text });
+  };
+  handleSubmit = () => {
+    const { addDeck, navigation } = this.props;
+
+    addDeck(this.state.text);
+    this.setState(() => ({ text: '' }));
+    navigation.goBack();
+    // navigation.navigate('DeckDetail', { title: this.state.text });
+  };
+  render() {
+    return (
+      <View style={styles.container}>{% raw %}
+        <View style={{ height: 60 }} />
+        <View style={styles.block}>
+          <Text style={styles.title}>What is the title of your new deck?</Text>
+        </View>
+        <View style={[styles.block]}>
+          <TextInput
+            style={styles.input}
+            value={this.state.text}
+            onChangeText={this.handleChange}
+          />
+        </View>
+        <TouchButton
+          btnStyle={{ backgroundColor: green, borderColor: white }}
+          onPress={this.handleSubmit}
+          disabled={this.state.text === ''}
+        >
+          Create Deck
+        </TouchButton>{% endraw %}
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    backgroundColor: gray
+  },
+  block: {
+    marginBottom: 20
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 32
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: textGray,
+    backgroundColor: white,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 5,
+    fontSize: 20,
+    height: 40,
+    marginBottom: 20
+  }
+});
+
+export default connect(
+  null,
+  { addDeck }
+)(AddDeck);
+```
+
+[![mfc23](assets/images/mfc23-small.jpg)](assets/images/mfc23.jpg)<br>
+<span class="center bold">Deck Added</span>
 
 <!-- ### 4.5 Settings Tab
 A settings tab has been added that allows AsyncStorage to be reset back to the original data set.

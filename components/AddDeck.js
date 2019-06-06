@@ -1,14 +1,29 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import TouchButton from './TouchButton';
 import { gray, green, white, textGray } from '../utils/colors';
+import { connect } from 'react-redux';
+import { addDeck } from '../actions/index';
 
 export class AddDeck extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    addDeck: PropTypes.func.isRequired
+  };
   state = {
     text: ''
   };
   handleChange = text => {
     this.setState({ text });
+  };
+  handleSubmit = () => {
+    const { addDeck, navigation } = this.props;
+
+    addDeck(this.state.text);
+    this.setState(() => ({ text: '' }));
+    navigation.goBack();
+    // navigation.navigate('DeckDetail', { title: this.state.text });
   };
   render() {
     return (
@@ -20,13 +35,14 @@ export class AddDeck extends Component {
         <View style={[styles.block]}>
           <TextInput
             style={styles.input}
-            value={this.state.value}
+            value={this.state.text}
             onChangeText={this.handleChange}
           />
         </View>
         <TouchButton
           btnStyle={{ backgroundColor: green, borderColor: white }}
-          onPress={() => console.log('deck created')}
+          onPress={this.handleSubmit}
+          disabled={this.state.text === ''}
         >
           Create Deck
         </TouchButton>
@@ -64,4 +80,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AddDeck;
+export default connect(
+  null,
+  { addDeck }
+)(AddDeck);
