@@ -5,26 +5,35 @@ import Deck from './Deck';
 import TouchButton from './TouchButton';
 import TextButton from './TextButton';
 import { gray, textGray, green, white, red } from '../utils/colors';
+import { connect } from 'react-redux';
+import { removeDeck } from '../actions/index';
 
 export class DeckDetail extends Component {
   static propTypes = {
-    navigation: PropTypes.object.isRequired
+    navigation: PropTypes.object.isRequired,
+    removeDeck: PropTypes.func.isRequired,
+    deck: PropTypes.object
   };
-  static navigationOptions = {
-    title: 'Deck Details'
+  shouldComponentUpdate(nextProps) {
+    return nextProps.deck !== undefined;
+  }
+  handleDelete = id => {
+    this.props.removeDeck(id);
+    this.props.navigation.goBack();
   };
   render() {
-    const { navigation } = this.props;
-    const deck = navigation.getParam('deck', 'Undefined deck');
+    const { deck } = this.props;
 
     return (
       <View style={styles.container}>
-        <Deck deck={deck} />
+        <Deck id={deck.title} />
         <View>
           <TouchButton
-            btnStyle={{ backgroundColor: gray, borderColor: textGray }}
+            btnStyle={{ backgroundColor: white, borderColor: textGray }}
             txtStyle={{ color: textGray }}
-            onPress={() => this.props.navigation.navigate('AddCard')}
+            onPress={() =>
+              this.props.navigation.navigate('AddCard', { title: deck.title })
+            }
           >
             Add Card
           </TouchButton>
@@ -38,7 +47,7 @@ export class DeckDetail extends Component {
         </View>
         <TextButton
           txtStyle={{ color: red }}
-          onPress={() => console.log('deck deleted')}
+          onPress={() => this.handleDelete(deck.title)}
         >
           Delete Deck
         </TextButton>
@@ -59,4 +68,16 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DeckDetail;
+const mapStateToProps = (state, { navigation }) => {
+  const title = navigation.getParam('title', 'undefined');
+  const deck = state[title];
+
+  return {
+    deck
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { removeDeck }
+)(DeckDetail);

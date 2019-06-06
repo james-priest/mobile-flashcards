@@ -1,9 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Platform } from 'react-native';
 import { Icon } from 'expo';
 import {
   createBottomTabNavigator,
-  createMaterialTopTabNavigator,
   createStackNavigator
 } from 'react-navigation';
 import DeckList from '../components/DeckList';
@@ -51,6 +51,16 @@ const routeConfigs = {
   }
 };
 
+routeConfigs.Decks.navigationOptions.tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired
+};
+routeConfigs.AddDeck.navigationOptions.tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired
+};
+routeConfigs.Settings.navigationOptions.tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired
+};
+
 const tabNavigatorConfig = {
   navigationOptions: {
     header: null
@@ -59,12 +69,9 @@ const tabNavigatorConfig = {
     bounces: true
   },
   tabBarOptions: {
-    // activeTintColor: isIOS ? green : white,
     activeTintColor: green,
     style: {
-      // height: isIOS ? 56 : 70,
       height: 60,
-      // backgroundColor: isIOS ? white : green,
       backgroundColor: white,
       shadowColor: 'rgba(0,0,0, 0.24)',
       shadowOffset: {
@@ -77,12 +84,10 @@ const tabNavigatorConfig = {
       borderTopColor: darkGray
     },
     labelStyle: {
-      // fontSize: isIOS ? 11 : 12
       fontSize: 12,
       fontWeight: 'bold'
     },
     tabStyle: {
-      // marginTop: isIOS ? 0 : 5
       marginTop: 5,
       marginBottom: 3
     },
@@ -90,9 +95,6 @@ const tabNavigatorConfig = {
   }
 };
 
-// const Tabs = isIOS
-//   ? createBottomTabNavigator(routeConfigs, tabNavigatorConfig)
-//   : createMaterialTopTabNavigator(routeConfigs, tabNavigatorConfig);
 const Tabs = createBottomTabNavigator(routeConfigs, tabNavigatorConfig);
 
 const MainNavigator = createStackNavigator(
@@ -106,8 +108,8 @@ const MainNavigator = createStackNavigator(
         headerTintColor: green,
         headerStyle: {
           backgroundColor: lightGreen
-          // height: 20
-        }
+        },
+        title: 'Deck Details'
       }
     },
     AddCard: {
@@ -116,7 +118,6 @@ const MainNavigator = createStackNavigator(
         headerTintColor: green,
         headerStyle: {
           backgroundColor: lightGreen
-          // height: 20
         },
         headerTitleStyle: {
           textAlign: 'center',
@@ -132,7 +133,6 @@ const MainNavigator = createStackNavigator(
         headerTintColor: green,
         headerStyle: {
           backgroundColor: lightGreen
-          // height: 20
         },
         title: 'Quiz'
       }
