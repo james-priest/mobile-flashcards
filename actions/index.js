@@ -26,10 +26,10 @@ export function removeDeck(id) {
   };
 }
 
-export function addQuestion(id, card) {
+export function addCardToDeck(deckId, card) {
   return {
     type: ADD_CARD,
-    id,
+    deckId,
     card
   };
 }
