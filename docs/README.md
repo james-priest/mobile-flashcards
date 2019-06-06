@@ -293,6 +293,217 @@ This view contains multiple instances of the Deck component.
 [![mfc18](assets/images/mfc18-small.jpg)](assets/images/mfc18.jpg)<br>
 <span class="center bold">Stack Navigator - Quiz Failing</span>
 
+### 3.6 Code
+The code is split into 3 parts.
+
+- MainTabNavigator - contains tab navigator & stack navigator code
+- AppNavigator.js - wrapper for MainTabNavigator
+- App.js - Entry point
+
+#### 3.6.1 MainTabNavigator.js
+
+```jsx
+// MainTabNavigator.js
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Platform } from 'react-native';
+import { Icon } from 'expo';
+import {
+  createBottomTabNavigator,
+  createStackNavigator
+} from 'react-navigation';
+import DeckList from '../components/DeckList';
+import AddDeck from '../components/AddDeck';
+import DeckDetail from '../components/DeckDetail';
+import AddCard from '../components/AddCard';
+import Quiz from '../components/Quiz';
+import Settings from '../components/Settings';
+
+import { darkGray, white, green, lightGreen } from '../utils/colors';
+
+const isIOS = Platform.OS === 'ios' ? true : false;
+
+const routeConfigs = {
+  Decks: {
+    screen: DeckList,
+    navigationOptions: {
+      tabBarLabel: 'Decks',
+      tabBarIcon: ({ tintColor }) => (
+        <Icon.Ionicons
+          name={isIOS ? 'ios-bookmarks' : 'md-bookmarks'}
+          size={30}
+          color={tintColor}
+        />
+      )
+    }
+  },
+  AddDeck: {
+    screen: AddDeck,
+    navigationOptions: {
+      tabBarLabel: 'Add Deck',
+      tabBarIcon: ({ tintColor }) => (
+        <Icon.FontAwesome name="plus-square" size={30} color={tintColor} />
+      )
+    }
+  },
+  Settings: {
+    screen: Settings,
+    navigationOptions: {
+      tabBarLabel: 'Settings',
+      tabBarIcon: ({ tintColor }) => (
+        <Icon.FontAwesome name="sliders" size={30} color={tintColor} />
+      )
+    }
+  }
+};
+
+routeConfigs.Decks.navigationOptions.tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired
+};
+routeConfigs.AddDeck.navigationOptions.tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired
+};
+routeConfigs.Settings.navigationOptions.tabBarIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired
+};
+
+const tabNavigatorConfig = {
+  navigationOptions: {
+    header: null
+  },
+  defaultNavigationOptions: {
+    bounces: true
+  },
+  tabBarOptions: {
+    activeTintColor: green,
+    style: {
+      height: 60,
+      backgroundColor: white,
+      shadowColor: 'rgba(0,0,0, 0.24)',
+      shadowOffset: {
+        width: 0,
+        height: 3
+      },
+      shadowRadius: 6,
+      shadowOpacity: 1,
+      borderTopWidth: 1,
+      borderTopColor: darkGray
+    },
+    labelStyle: {
+      fontSize: 12,
+      fontWeight: 'bold'
+    },
+    tabStyle: {
+      marginTop: 5,
+      marginBottom: 3
+    },
+    showIcon: true
+  }
+};
+
+const Tabs = createBottomTabNavigator(routeConfigs, tabNavigatorConfig);
+
+const MainNavigator = createStackNavigator(
+  {
+    Home: {
+      screen: Tabs
+    },
+    DeckDetail: {
+      screen: DeckDetail,
+      navigationOptions: {
+        headerTintColor: green,
+        headerStyle: {
+          backgroundColor: lightGreen
+        },
+        title: 'Deck Details'
+      }
+    },
+    AddCard: {
+      screen: AddCard,
+      navigationOptions: {
+        headerTintColor: green,
+        headerStyle: {
+          backgroundColor: lightGreen
+        },
+        headerTitleStyle: {
+          textAlign: 'center',
+          justifyContent: 'center',
+          textAlign: 'center'
+        },
+        title: 'Add Card'
+      }
+    },
+    Quiz: {
+      screen: Quiz,
+      navigationOptions: {
+        headerTintColor: green,
+        headerStyle: {
+          backgroundColor: lightGreen
+        },
+        title: 'Quiz'
+      }
+    }
+  },
+  { headerLayoutPreset: 'center' }
+);
+
+export default MainNavigator;
+```
+
+#### 3.6.2 AppNavigator.js
+
+```jsx
+// AppNavigator.js
+import React from 'react';
+import { createAppContainer } from 'react-navigation';
+import MainTabNavigator from './MainTabNavigator';
+
+export default createAppContainer(MainTabNavigator);
+```
+
+#### 3.6.3 App.js
+
+```jsx
+// App.js
+import React from 'react';
+import PropTypes from 'prop-types';
+import { StyleSheet, View, StatusBar } from 'react-native';
+import { Constants } from 'expo';
+import AppNavigator from './navigation/AppNavigator';
+
+function FlashcardStatusBar({ backgroundColor, ...props }) {
+  return ({% raw %}
+    <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    </View>{% endraw %}
+  );
+}
+FlashcardStatusBar.propTypes = {
+  backgroundColor: PropTypes.string.isRequired
+};
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <FlashcardStatusBar
+          backgroundColor="green"
+          barStyle="light-content"
+        />
+        <AppNavigator />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#dde'
+  }
+});
+```
+
 ## 4. Redux
 The next step was to add in all the redux pieces.
 
@@ -464,7 +675,13 @@ Now we can connect Redux up to our initial component. This is in './components/D
 // DeckList.js
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native';
 import { connect } from 'react-redux';
 import Deck from './Deck';
 import { gray, green } from '../utils/colors';
@@ -483,7 +700,7 @@ export class DeckList extends Component {
     const { decks, navigation } = this.props;
 
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container}>{% raw %}
         <Text style={styles.title}>Mobile Flashcards</Text>
         {Object.values(decks).map(deck => {
           return (
@@ -497,7 +714,8 @@ export class DeckList extends Component {
             </TouchableOpacity>
           );
         })}
-      </ScrollView>
+        <View style={{ marginBottom: 30 }} />
+      </ScrollView>{% endraw %}
     );
   }
 }
@@ -519,7 +737,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = decks => ({ decks });
+const mapStateToProps = state => ({ decks: state });
 
 export default connect(
   mapStateToProps,
@@ -534,13 +752,16 @@ The Decks component is located in './components/Deck.js'. It looks like this.
 // Deck.js
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { white, textGray } from '../utils/colors';
 import { connect } from 'react-redux';
 
 const Deck = props => {
   const { deck } = props;
 
+  if (deck === undefined) {
+    return <View style={styles.deckContainer} />;
+  }
   return (
     <View style={styles.deckContainer}>
       <View>
@@ -553,7 +774,7 @@ const Deck = props => {
   );
 };
 Deck.propTypes = {
-  deck: PropTypes.object.isRequired
+  deck: PropTypes.object
 };
 
 const styles = StyleSheet.create({
@@ -586,6 +807,7 @@ const mapStateToProps = (state, { id }) => {
 };
 
 export default connect(mapStateToProps)(Deck);
+
 ```
 
 ## 5. Wire-up Components
@@ -710,17 +932,17 @@ export class DeckDetail extends Component {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
     removeDeck: PropTypes.func.isRequired,
-    decks: PropTypes.object.isRequired
+    deck: PropTypes.object
   };
+  shouldComponentUpdate(nextProps) {
+    return nextProps.deck !== undefined;
+  }
   handleDelete = id => {
     this.props.removeDeck(id);
     this.props.navigation.goBack();
   };
   render() {
-    const { navigation, decks } = this.props;
-
-    const title = navigation.getParam('title', 'Undefined title');
-    const deck = decks[title];
+    const { deck } = this.props;
 
     return (
       <View style={styles.container}>{% raw %}
@@ -766,7 +988,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = decks => ({ decks });
+const mapStateToProps = (state, { navigation }) => {
+  const title = navigation.getParam('title', 'undefined');
+  const deck = state[title];
+
+  return {
+    deck
+  };
+};
 
 export default connect(
   mapStateToProps,
