@@ -33,6 +33,7 @@ export default function decks(state = {}, action) {
       return {
         ...state,
         [deckId]: {
+          ...state[deckId],
           questions: [...state[deckId].questions].concat(card)
         }
       };
