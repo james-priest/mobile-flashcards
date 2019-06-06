@@ -588,7 +588,7 @@ const mapStateToProps = (state, { id }) => {
 export default connect(mapStateToProps)(Deck);
 ```
 
-## 5. Wire-up components
+## 5. Wire-up Components
 ### 5.1  Add Deck
 
 [![mfc24](assets/images/mfc24-small.jpg)](assets/images/mfc24.jpg)<br>
