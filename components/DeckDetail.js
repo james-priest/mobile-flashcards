@@ -12,17 +12,17 @@ export class DeckDetail extends Component {
   static propTypes = {
     navigation: PropTypes.object.isRequired,
     removeDeck: PropTypes.func.isRequired,
-    decks: PropTypes.object.isRequired
+    deck: PropTypes.object
   };
+  shouldComponentUpdate(nextProps) {
+    return nextProps.deck !== undefined;
+  }
   handleDelete = id => {
     this.props.removeDeck(id);
     this.props.navigation.goBack();
   };
   render() {
-    const { navigation, decks } = this.props;
-
-    const title = navigation.getParam('title', 'Undefined title');
-    const deck = decks[title];
+    const { deck } = this.props;
 
     return (
       <View style={styles.container}>
@@ -68,7 +68,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = decks => ({ decks });
+const mapStateToProps = (state, { navigation }) => {
+  const title = navigation.getParam('title', 'undefined');
+  const deck = state[title];
+
+  return {
+    deck
+  };
+};
 
 export default connect(
   mapStateToProps,
