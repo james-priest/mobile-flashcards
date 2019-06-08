@@ -1141,13 +1141,7 @@ export default connect(
 // Quiz.js
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  View,
-  ScrollView,
-  Text,
-  StyleSheet,
-  ViewPagerAndroid
-} from 'react-native';
+import { View, Text, StyleSheet, ViewPagerAndroid } from 'react-native';
 import TextButton from './TextButton';
 import TouchButton from './TouchButton';
 import { gray, green, red, textGray, darkGray, white } from '../utils/colors';
@@ -1168,27 +1162,19 @@ export class Quiz extends Component {
     navigation: PropTypes.object.isRequired,
     deck: PropTypes.object.isRequired
   };
-  static navigationOptions = ({ navigation }) => {
-    const title = navigation.getParam('title', '');
-    return {
-      title: `${title} Quiz`
-    };
-  };
   state = {
     show: screen.QUESTION,
     correct: 0,
     incorrect: 0,
-    page: 0,
     questionCount: this.props.deck.questions.length,
     answered: Array(this.props.deck.questions.length).fill(0)
   };
   handlePageChange = evt => {
     this.setState({
-      show: screen.QUESTION,
-      page: evt.nativeEvent.position
+      show: screen.QUESTION
     });
   };
-  handleAnswer = response => {
+  handleAnswer = (response, page) => {
     if (response === answer.CORRECT) {
       this.setState(prevState => ({ correct: prevState.correct + 1 }));
     } else {
@@ -1196,9 +1182,7 @@ export class Quiz extends Component {
     }
     this.setState(
       prevState => ({
-        answered: prevState.answered.map((val, idx) =>
-          prevState.page === idx ? 1 : val
-        )
+        answered: prevState.answered.map((val, idx) => (page === idx ? 1 : val))
       }),
       () => {
         const { correct, incorrect, questionCount } = this.state;
@@ -1206,8 +1190,10 @@ export class Quiz extends Component {
         if (questionCount === correct + incorrect) {
           this.setState({ show: screen.RESULT });
         } else {
-          this.viewPager.setPage(this.state.page + 1);
-          this.setState(prevState => ({ page: prevState.page + 1 }));
+          this.viewPager.setPage(page + 1);
+          this.setState(prevState => ({
+            show: screen.QUESTION
+          }));
         }
       }
     );
@@ -1217,7 +1203,6 @@ export class Quiz extends Component {
       show: screen.QUESTION,
       correct: 0,
       incorrect: 0,
-      page: 0,
       answered: Array(prevState.questionCount).fill(0)
     }));
   };
@@ -1318,14 +1303,14 @@ export class Quiz extends Component {
             <View>
               <TouchButton
                 btnStyle={{ backgroundColor: green, borderColor: white }}
-                onPress={() => this.handleAnswer(answer.CORRECT)}
+                onPress={() => this.handleAnswer(answer.CORRECT, idx)}
                 disabled={this.state.answered[idx] === 1}
               >
                 Correct
               </TouchButton>
               <TouchButton
                 btnStyle={{ backgroundColor: red, borderColor: white }}
-                onPress={() => this.handleAnswer(answer.INCORRECT)}
+                onPress={() => this.handleAnswer(answer.INCORRECT, idx)}
                 disabled={this.state.answered[idx] === 1}
               >
                 Incorrect
@@ -1393,8 +1378,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = (state, { navigation }) => {
-  const title = navigation.getParam('title', 'undefined');
+const mapStateToProps = (state, { title }) => {
   const deck = state[title];
 
   return {
@@ -1402,8 +1386,310 @@ const mapStateToProps = (state, { navigation }) => {
   };
 };
 
-export default connect(mapStateToProps)(Quiz);
+export default withNavigation(connect(mapStateToProps)(Quiz_Android));
 ```
+
+### 5.5 Quiz - iOS
+
+[![mfc31](assets/images/mfc31-small.jpg)](assets/images/mfc31.jpg)<br>
+<span class="center bold">Quiz Question #1</span>
+
+[![mfc32](assets/images/mfc32-small.jpg)](assets/images/mfc32.jpg)<br>
+<span class="center bold">Quiz Question #2</span>
+
+[![mfc33](assets/images/mfc33-small.jpg)](assets/images/mfc33.jpg)<br>
+<span class="center bold">Quiz Result</span>
+
+```jsx
+// Quiz_iOS.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import TextButton from './TextButton';
+import TouchButton from './TouchButton';
+import { gray, green, red, textGray, darkGray, white } from '../utils/colors';
+import { connect } from 'react-redux';
+import { withNavigation } from 'react-navigation';
+
+const screen = {
+  QUESTION: 'question',
+  ANSWER: 'answer',
+  RESULT: 'result'
+};
+const answer = {
+  CORRECT: 'correct',
+  INCORRECT: 'incorrect'
+};
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+class Quiz_iOS extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    deck: PropTypes.object.isRequired
+  };
+  state = {
+    show: screen.QUESTION,
+    correct: 0,
+    incorrect: 0,
+    questionCount: this.props.deck.questions.length,
+    answered: Array(this.props.deck.questions.length).fill(0)
+  };
+  handleScroll = () => {
+    this.setState({
+      show: screen.QUESTION
+    });
+  };
+  handleAnswer = (response, page) => {
+    if (response === answer.CORRECT) {
+      this.setState(prevState => ({ correct: prevState.correct + 1 }));
+    } else {
+      this.setState(prevState => ({ incorrect: prevState.incorrect + 1 }));
+    }
+    this.setState(
+      prevState => ({
+        answered: prevState.answered.map((val, idx) => (page === idx ? 1 : val))
+      }),
+      () => {
+        const { correct, incorrect, questionCount } = this.state;
+
+        if (questionCount === correct + incorrect) {
+          this.setState({ show: screen.RESULT });
+        } else {
+          this.scrollView.scrollTo({ x: (page + 1) * SCREEN_WIDTH });
+          this.setState(prevState => ({
+            show: screen.QUESTION
+          }));
+        }
+      }
+    );
+  };
+  handleReset = () => {
+    this.setState(prevState => ({
+      show: screen.QUESTION,
+      correct: 0,
+      incorrect: 0,
+      answered: Array(prevState.questionCount).fill(0)
+    }));
+  };
+  render() {
+    const { questions } = this.props.deck;
+    const { show } = this.state;
+
+    if (this.state.show === screen.RESULT) {
+      const { correct, questionCount } = this.state;
+      const percent = ((correct / questionCount) * 100).toFixed(0);
+      const resultStyle =
+        percent >= 70 ? styles.resultTextGood : styles.resultTextBad;
+
+      return (
+        <View style={styles.pageStyle}>{% raw %}
+          <View style={styles.block}>
+            <Text style={styles.count}>Done</Text>
+          </View>
+          <View style={styles.block}>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              Quiz Complete!
+            </Text>
+            <Text style={resultStyle}>
+              {correct} / {questionCount} correct
+            </Text>
+          </View>
+          <View style={styles.block}>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              Percentage correct
+            </Text>
+            <Text style={resultStyle}>{percent}%</Text>
+          </View>
+          <View>
+            <TouchButton
+              btnStyle={{ backgroundColor: green, borderColor: white }}
+              onPress={this.handleReset}
+            >
+              Restart Quiz
+            </TouchButton>
+            <TouchButton
+              btnStyle={{ backgroundColor: gray, borderColor: textGray }}
+              txtStyle={{ color: textGray }}
+              onPress={() => {
+                this.handleReset();
+                this.props.navigation.navigate('Home');
+              }}
+            >
+              Home
+            </TouchButton>
+          </View>
+        </View>{% endraw %}
+      );
+    }
+
+    return (
+      <ScrollView
+        style={styles.container}
+        pagingEnabled={true}
+        horizontal={true}
+        onMomentumScrollBegin={this.handleScroll}
+        ref={scrollView => {
+          this.scrollView = scrollView;
+        }}
+      >
+        {questions.map((question, idx) => (
+          <View style={styles.pageStyle} key={idx}>{% raw %}
+            <View style={styles.block}>
+              <Text style={styles.count}>
+                {idx + 1} / {questions.length}
+              </Text>
+            </View>
+            <View style={[styles.block, styles.questionContainer]}>
+              <Text style={styles.questionText}>
+                {show === screen.QUESTION ? 'Question' : 'Answer'}
+              </Text>
+              <View style={styles.questionWrapper}>
+                <Text style={styles.title}>
+                  {show === screen.QUESTION
+                    ? question.question
+                    : question.answer}
+                </Text>
+              </View>
+            </View>
+            {show === screen.QUESTION ? (
+              <TextButton
+                txtStyle={{ color: red }}
+                onPress={() => this.setState({ show: screen.ANSWER })}
+              >
+                Answer
+              </TextButton>
+            ) : (
+              <TextButton
+                txtStyle={{ color: red }}
+                onPress={() => this.setState({ show: screen.QUESTION })}
+              >
+                Question
+              </TextButton>
+            )}
+            <View>
+              <TouchButton
+                btnStyle={{ backgroundColor: green, borderColor: white }}
+                onPress={() => this.handleAnswer(answer.CORRECT, idx)}
+                disabled={this.state.answered[idx] === 1}
+              >
+                Correct
+              </TouchButton>
+              <TouchButton
+                btnStyle={{ backgroundColor: red, borderColor: white }}
+                onPress={() => this.handleAnswer(answer.INCORRECT, idx)}
+                disabled={this.state.answered[idx] === 1}
+              >
+                Incorrect
+              </TouchButton>
+            </View>
+          </View>
+        ))}
+      </ScrollView>{% endraw %}
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  pageStyle: {
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    backgroundColor: gray,
+    justifyContent: 'space-around',
+    width: SCREEN_WIDTH
+  },
+  block: {
+    marginBottom: 20
+  },
+  count: {
+    fontSize: 24
+  },
+  title: {
+    fontSize: 32,
+    textAlign: 'center'
+  },
+  questionContainer: {
+    borderWidth: 1,
+    borderColor: darkGray,
+    backgroundColor: white,
+    borderRadius: 5,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 16,
+    paddingRight: 16,
+    flexGrow: 1
+  },
+  questionWrapper: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  questionText: {
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+    fontSize: 20
+  },
+  resultTextGood: {
+    color: green,
+    fontSize: 46,
+    textAlign: 'center'
+  },
+  resultTextBad: {
+    color: red,
+    fontSize: 46,
+    textAlign: 'center'
+  }
+});
+
+const mapStateToProps = (state, { title }) => {
+  const deck = state[title];
+
+  return {
+    deck
+  };
+};
+
+export default withNavigation(connect(mapStateToProps)(Quiz_iOS));
+```
+
+### 5.6 Quiz Wrapper
+
+```jsx
+// Quiz.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Constants } from 'expo';
+import Quiz_Android from './Quiz_Android';
+import Quiz_iOS from './Quiz_iOS';
+
+export class Quiz extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired
+  };
+  static navigationOptions = ({ navigation }) => {
+    const title = navigation.getParam('title', '');
+    return {
+      title: `${title} Quiz`
+    };
+  };
+  render() {
+    const { navigation } = this.props;
+    const title = navigation.getParam('title', '');
+
+    if (Constants.platform.android) {
+      return <Quiz_Android title={title} />;
+    }
+    return <Quiz_iOS title={title} />;
+  }
+}
+
+export default Quiz;
+```
+
 
 <!-- ### 4.5 Settings Tab
 A settings tab has been added that allows AsyncStorage to be reset back to the original data set.
