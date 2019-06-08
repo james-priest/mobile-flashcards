@@ -439,8 +439,7 @@ const MainNavigator = createStackNavigator(
         headerTintColor: green,
         headerStyle: {
           backgroundColor: lightGreen
-        },
-        title: 'Quiz'
+        }
       }
     }
   },
@@ -957,7 +956,9 @@ export class DeckDetail extends Component {
           <TouchButton
             btnStyle={{ backgroundColor: green, borderColor: white }}
             txtStyle={{ color: white }}
-            onPress={() => this.props.navigation.navigate('Quiz')}
+            onPress={() =>
+              this.props.navigation.navigate('Quiz', { title: deck.title })
+            }
           >
             Start Quiz
           </TouchButton>
@@ -1123,6 +1124,285 @@ export default connect(
   mapStateToProps,
   { addCardToDeck }
 )(AddCard);
+```
+
+### 5.4 Quiz - Android
+
+[![mfc28](assets/images/mfc28-small.jpg)](assets/images/mfc28.jpg)<br>
+<span class="center bold">Quiz Question #1</span>
+
+[![mfc29](assets/images/mfc29-small.jpg)](assets/images/mfc29.jpg)<br>
+<span class="center bold">Quiz Question #2</span>
+
+[![mfc30](assets/images/mfc30-small.jpg)](assets/images/mfc30.jpg)<br>
+<span class="center bold">Quiz Results</span>
+
+```jsx
+// Quiz.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  ViewPagerAndroid
+} from 'react-native';
+import TextButton from './TextButton';
+import TouchButton from './TouchButton';
+import { gray, green, red, textGray, darkGray, white } from '../utils/colors';
+import { connect } from 'react-redux';
+
+const screen = {
+  QUESTION: 'question',
+  ANSWER: 'answer',
+  RESULT: 'result'
+};
+const answer = {
+  CORRECT: 'correct',
+  INCORRECT: 'incorrect'
+};
+
+export class Quiz extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    deck: PropTypes.object.isRequired
+  };
+  static navigationOptions = ({ navigation }) => {
+    const title = navigation.getParam('title', '');
+    return {
+      title: `${title} Quiz`
+    };
+  };
+  state = {
+    show: screen.QUESTION,
+    correct: 0,
+    incorrect: 0,
+    page: 0,
+    questionCount: this.props.deck.questions.length,
+    answered: Array(this.props.deck.questions.length).fill(0)
+  };
+  handlePageChange = evt => {
+    this.setState({
+      show: screen.QUESTION,
+      page: evt.nativeEvent.position
+    });
+  };
+  handleAnswer = response => {
+    if (response === answer.CORRECT) {
+      this.setState(prevState => ({ correct: prevState.correct + 1 }));
+    } else {
+      this.setState(prevState => ({ incorrect: prevState.incorrect + 1 }));
+    }
+    this.setState(
+      prevState => ({
+        answered: prevState.answered.map((val, idx) =>
+          prevState.page === idx ? 1 : val
+        )
+      }),
+      () => {
+        const { correct, incorrect, questionCount } = this.state;
+
+        if (questionCount === correct + incorrect) {
+          this.setState({ show: screen.RESULT });
+        } else {
+          this.viewPager.setPage(this.state.page + 1);
+          this.setState(prevState => ({ page: prevState.page + 1 }));
+        }
+      }
+    );
+  };
+  handleReset = () => {
+    this.setState(prevState => ({
+      show: screen.QUESTION,
+      correct: 0,
+      incorrect: 0,
+      page: 0,
+      answered: Array(prevState.questionCount).fill(0)
+    }));
+  };
+  render() {
+    const { questions } = this.props.deck;
+    const { show } = this.state;
+
+    if (this.state.show === screen.RESULT) {
+      const { correct, questionCount } = this.state;
+      const percent = ((correct / questionCount) * 100).toFixed(0);
+      const resultStyle =
+        percent >= 70 ? styles.resultTextGood : styles.resultTextBad;
+
+      return (
+        <View style={styles.pageStyle}>{% raw %}
+          <View style={styles.block}>
+            <Text style={styles.count}>Done</Text>
+          </View>
+          <View style={styles.block}>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              Quiz Complete!
+            </Text>
+            <Text style={resultStyle}>
+              {correct} / {questionCount} correct
+            </Text>
+          </View>
+          <View style={styles.block}>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              Percentage correct
+            </Text>
+            <Text style={resultStyle}>{percent}%</Text>
+          </View>
+          <View>
+            <TouchButton
+              btnStyle={{ backgroundColor: green, borderColor: white }}
+              onPress={this.handleReset}
+            >
+              Restart Quiz
+            </TouchButton>
+            <TouchButton
+              btnStyle={{ backgroundColor: gray, borderColor: textGray }}
+              txtStyle={{ color: textGray }}
+              onPress={() => {
+                this.handleReset();
+                this.props.navigation.navigate('Home');
+              }}
+            >
+              Home
+            </TouchButton>
+          </View>
+        </View>{% endraw %}
+      );
+    }
+
+    return (
+      <ViewPagerAndroid
+        style={styles.container}
+        scrollEnabled={true}
+        onPageSelected={this.handlePageChange}
+        ref={viewPager => {
+          this.viewPager = viewPager;
+        }}
+      >
+        {questions.map((question, idx) => (
+          <View style={styles.pageStyle} key={idx}>{% raw %}
+            <View style={styles.block}>
+              <Text style={styles.count}>
+                {idx + 1} / {questions.length}
+              </Text>
+            </View>
+            <View style={[styles.block, styles.questionContainer]}>
+              <Text style={styles.questionText}>
+                {show === screen.QUESTION ? 'Question' : 'Answer'}
+              </Text>
+              <View style={styles.questionWrapper}>
+                <Text style={styles.title}>
+                  {show === screen.QUESTION
+                    ? question.question
+                    : question.answer}
+                </Text>
+              </View>
+            </View>
+            {show === screen.QUESTION ? (
+              <TextButton
+                txtStyle={{ color: red }}
+                onPress={() => this.setState({ show: screen.ANSWER })}
+              >
+                Answer
+              </TextButton>
+            ) : (
+              <TextButton
+                txtStyle={{ color: red }}
+                onPress={() => this.setState({ show: screen.QUESTION })}
+              >
+                Question
+              </TextButton>
+            )}
+            <View>
+              <TouchButton
+                btnStyle={{ backgroundColor: green, borderColor: white }}
+                onPress={() => this.handleAnswer(answer.CORRECT)}
+                disabled={this.state.answered[idx] === 1}
+              >
+                Correct
+              </TouchButton>
+              <TouchButton
+                btnStyle={{ backgroundColor: red, borderColor: white }}
+                onPress={() => this.handleAnswer(answer.INCORRECT)}
+                disabled={this.state.answered[idx] === 1}
+              >
+                Incorrect
+              </TouchButton>
+            </View>
+          </View>
+        ))}
+      </ViewPagerAndroid>{% endraw %}
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  pageStyle: {
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    backgroundColor: gray,
+    justifyContent: 'space-around'
+  },
+  block: {
+    marginBottom: 20
+  },
+  count: {
+    fontSize: 24
+  },
+  title: {
+    fontSize: 32,
+    textAlign: 'center'
+  },
+  questionContainer: {
+    borderWidth: 1,
+    borderColor: darkGray,
+    backgroundColor: white,
+    borderRadius: 5,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 16,
+    paddingRight: 16,
+    flexGrow: 1
+  },
+  questionWrapper: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  questionText: {
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+    fontSize: 20
+  },
+  resultTextGood: {
+    color: green,
+    fontSize: 46,
+    textAlign: 'center'
+  },
+  resultTextBad: {
+    color: red,
+    fontSize: 46,
+    textAlign: 'center'
+  }
+});
+
+const mapStateToProps = (state, { navigation }) => {
+  const title = navigation.getParam('title', 'undefined');
+  const deck = state[title];
+
+  return {
+    deck
+  };
+};
+
+export default connect(mapStateToProps)(Quiz);
 ```
 
 <!-- ### 4.5 Settings Tab
