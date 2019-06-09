@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import Quiz_Android from './Quiz_Android';
 import Quiz_iOS from './Quiz_iOS';
 

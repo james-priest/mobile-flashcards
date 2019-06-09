@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 import reducer from './reducers/index';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import AppNavigator from './navigation/AppNavigator';
 
 const store = createStore(
