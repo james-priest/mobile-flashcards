@@ -1210,6 +1210,21 @@ export class Quiz extends Component {
     const { questions } = this.props.deck;
     const { show } = this.state;
 
+    if (questions.length === 0) {
+      return (
+        <View style={styles.pageStyle}>
+          <View style={styles.block}>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              You cannot take a quiz because there are no cards in the deck.
+            </Text>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              Please add some cards and try again.
+            </Text>
+          </View>
+        </View>
+      );
+    }
+
     if (this.state.show === screen.RESULT) {
       const { correct, questionCount } = this.state;
       const percent = ((correct / questionCount) * 100).toFixed(0);
@@ -1475,6 +1490,21 @@ class Quiz_iOS extends Component {
     const { questions } = this.props.deck;
     const { show } = this.state;
 
+    if (questions.length === 0) {
+      return (
+        <View style={styles.pageStyle}>
+          <View style={styles.block}>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              You cannot take a quiz because there are no cards in the deck.
+            </Text>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              Please add some cards and try again.
+            </Text>
+          </View>
+        </View>
+      );
+    }
+
     if (this.state.show === screen.RESULT) {
       const { correct, questionCount } = this.state;
       const percent = ((correct / questionCount) * 100).toFixed(0);
@@ -1690,9 +1720,246 @@ export class Quiz extends Component {
 export default Quiz;
 ```
 
+## 6. AsyncStorage
+Next I added AsyncStorage to each of my store updates in order to persist data between sessions.
 
-<!-- ### 4.5 Settings Tab
+### 6.1 Add Deck
+
+#### 6.1.1 AddDeck.js
+
+```jsx
+// AddDeck.js
+import { saveDeckTitleAS } from '../utils/api';
+
+export class AddDeck extends Component {
+  ...
+  handleSubmit = () => {
+    const { addDeck, navigation } = this.props;
+    const { text } = this.state;
+
+    addDeck(text);
+    saveDeckTitleAS(text);
+
+    this.setState(() => ({ text: '' }));
+    navigation.goBack();
+  };
+  ...
+}
+```
+
+#### 6.1.2 api.js
+
+```js
+// api.js
+export async function saveDeckTitleAS(title) {
+  try {
+    await AsyncStorage.mergeItem(
+      DECKS_STORAGE_KEY,
+      JSON.stringify({
+        [title]: {
+          title,
+          questions: []
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
+
+### 6.2 Add Card
+
+#### 6.2.1 AddCard.js
+
+```jsx
+// AddCard.js
+import { addCardToDeckAS } from '../utils/api';
+
+export class AddCard extends Component {
+  ...
+  handleSubmit = () => {
+    const { addCardToDeck, title, navigation } = this.props;
+    const card = {
+      question: this.state.question,
+      answer: this.state.answer
+    };
+
+    addCardToDeck(title, card);
+    addCardToDeckAS(title, card);
+
+    this.setState({ question: '', answer: '' });
+    navigation.goBack();
+  };
+  ...
+}
+```
+
+#### 6.2.2 api.js
+
+```js
+// api.js
+export async function addCardToDeckAS(title, card) {
+  try {
+    const deck = await getDeck(title);
+
+    await AsyncStorage.mergeItem(
+      DECKS_STORAGE_KEY,
+      JSON.stringify({
+        [title]: {
+          questions: [...deck.questions].concat(card)
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
+
+### 6.3 Delete Deck
+
+#### 6.3.1 DeckDetail.js
+
+```jsx
+// DeleteDeck.js
+import { removeDeckAS } from '../utils/api';
+
+export class DeckDetail extends Component {
+  ...
+  handleDelete = id => {
+    const { removeDeck, navigation } = this.props;
+
+    removeDeck(id);
+    removeDeckAS(id);
+    navigation.goBack();
+  };
+  ...
+}
+```
+
+#### 6.3.2 api.js
+
+```js
+// api.js
+export async function removeDeckAS(key) {
+  try {
+    const results = await AsyncStorage.getItem(DECKS_STORAGE_KEY);
+    const data = JSON.parse(results);
+    data[key] = undefined;
+    delete data[key];
+    AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data));
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
+
+### 6.4 Settings Tab
 A settings tab has been added that allows AsyncStorage to be reset back to the original data set.
 
 [![mfc20](assets/images/mfc20-small.jpg)](assets/images/mfc20.jpg)<br>
-<span class="center bold">Settings Tab</span> -->
+<span class="center bold">Settings Tab</span>
+
+#### 6.4.1 Settings.js
+
+```jsx
+// Settings.js
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Text, View, StyleSheet } from 'react-native';
+import { gray, white, red, textGray, green } from '../utils/colors';
+import TouchButton from './TouchButton';
+import { resetDecks } from '../utils/api.js';
+import { connect } from 'react-redux';
+import { resetStore } from '../actions/index';
+
+export class Settings extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    resetStore: PropTypes.func.isRequired
+  };
+  handleResetDecks = () => {
+    const { resetStore, navigation } = this.props;
+
+    resetStore();
+    resetDecks();
+    navigation.goBack();
+  };
+  render() {
+    return (
+      <View style={styles.container}>{% raw %}
+        <Text style={styles.title}> Settings </Text>
+        <View style={styles.block}>
+          <View style={styles.blockContainer}>
+            <Text style={styles.blockText}>
+              This will reset the data back to the original data set.
+            </Text>
+            <View style={{ height: 20 }} />
+            <TouchButton
+              btnStyle={{ backgroundColor: red, borderColor: white }}
+              onPress={this.handleResetDecks}
+            >
+              Reset Data
+            </TouchButton>
+          </View>
+        </View>
+      </View>{% endraw %}
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    backgroundColor: gray
+  },
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginBottom: 16,
+    color: green
+  },
+  block: {
+    marginBottom: 20
+  },
+  blockContainer: {
+    borderWidth: 1,
+    borderColor: '#aaa',
+    backgroundColor: white,
+    borderRadius: 5,
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingLeft: 20
+  },
+  blockText: {
+    fontSize: 18,
+    color: textGray
+  }
+});
+
+export default connect(
+  null,
+  { resetStore }
+)(Settings);
+```
+
+#### 6.4.2 api.js
+
+```js
+// api.js
+export async function resetDecks() {
+  try {
+    await AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks));
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
+
+[![mfc34](assets/images/mfc34-small.jpg)](assets/images/mfc34.jpg)<br>
+<span class="center bold">Reset Data</span>

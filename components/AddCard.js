@@ -5,6 +5,7 @@ import TouchButton from './TouchButton';
 import { gray, green } from '../utils/colors';
 import { connect } from 'react-redux';
 import { addCardToDeck } from '../actions/index';
+import { addCardToDeckAS } from '../utils/api';
 
 export class AddCard extends Component {
   static propTypes = {
@@ -30,6 +31,8 @@ export class AddCard extends Component {
     };
 
     addCardToDeck(title, card);
+    addCardToDeckAS(title, card);
+
     this.setState({ question: '', answer: '' });
     navigation.goBack();
   };
@@ -46,6 +49,10 @@ export class AddCard extends Component {
               value={this.state.question}
               onChangeText={this.handleQuestionChange}
               placeholder="Question"
+              autoFocus={true}
+              returnKeyType="next"
+              onSubmitEditing={() => this.answerTextInput.focus()}
+              blurOnSubmit={false}
             />
           </View>
           <View style={[styles.block]}>
@@ -54,6 +61,11 @@ export class AddCard extends Component {
               value={this.state.answer}
               onChangeText={this.handleAnswerChange}
               placeholder="Answer"
+              ref={input => {
+                this.answerTextInput = input;
+              }}
+              returnKeyType="done"
+              onSubmitEditing={this.handleSubmit}
             />
           </View>
           <TouchButton

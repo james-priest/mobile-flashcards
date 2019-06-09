@@ -74,6 +74,21 @@ class Quiz_iOS extends Component {
     const { questions } = this.props.deck;
     const { show } = this.state;
 
+    if (questions.length === 0) {
+      return (
+        <View style={styles.pageStyle}>
+          <View style={styles.block}>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              You cannot take a quiz because there are no cards in the deck.
+            </Text>
+            <Text style={[styles.count, { textAlign: 'center' }]}>
+              Please add some cards and try again.
+            </Text>
+          </View>
+        </View>
+      );
+    }
+
     if (this.state.show === screen.RESULT) {
       const { correct, questionCount } = this.state;
       const percent = ((correct / questionCount) * 100).toFixed(0);
@@ -82,9 +97,6 @@ class Quiz_iOS extends Component {
 
       return (
         <View style={styles.pageStyle}>
-          <View style={styles.block}>
-            <Text style={styles.count}>Done</Text>
-          </View>
           <View style={styles.block}>
             <Text style={[styles.count, { textAlign: 'center' }]}>
               Quiz Complete!
