@@ -4,14 +4,20 @@ import { Text, View, StyleSheet } from 'react-native';
 import { gray, white, red, textGray, green } from '../utils/colors';
 import TouchButton from './TouchButton';
 import { resetDecks } from '../utils/api.js';
+import { connect } from 'react-redux';
+import { resetStore } from '../actions/index';
 
 export class Settings extends Component {
   static propTypes = {
-    navigation: PropTypes.object.isRequired
+    navigation: PropTypes.object.isRequired,
+    resetStore: PropTypes.func.isRequired
   };
   handleResetDecks = () => {
-    // resetDecks();
-    this.props.navigation.goBack();
+    const { resetStore, navigation } = this.props;
+
+    resetStore();
+    resetDecks();
+    navigation.goBack();
   };
   render() {
     return (
@@ -69,4 +75,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Settings;
+export default connect(
+  null,
+  { resetStore }
+)(Settings);
