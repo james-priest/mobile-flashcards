@@ -7,6 +7,7 @@ import TextButton from './TextButton';
 import { gray, textGray, green, white, red } from '../utils/colors';
 import { connect } from 'react-redux';
 import { removeDeck } from '../actions/index';
+import { removeDeckAS } from '../utils/api';
 
 export class DeckDetail extends Component {
   static propTypes = {
@@ -18,8 +19,11 @@ export class DeckDetail extends Component {
     return nextProps.deck !== undefined;
   }
   handleDelete = id => {
-    this.props.removeDeck(id);
-    this.props.navigation.goBack();
+    const { removeDeck, navigation } = this.props;
+
+    removeDeck(id);
+    removeDeckAS(id);
+    navigation.goBack();
   };
   render() {
     const { deck } = this.props;
