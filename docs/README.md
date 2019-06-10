@@ -2082,3 +2082,51 @@ export class Quiz extends Component {
 
 [![mfc36](assets/images/mfc36-small.jpg)](assets/images/mfc36.jpg)<br>
 <span class="center bold">Notification Screen</span>
+
+## 8. Clean-up
+### 8.1 Add Splash
+
+[![mfc37](assets/images/mfc37-small.jpg)](assets/images/mfc37.jpg)<br>
+<span class="center bold">Splash Screen</span>
+
+### 8.2 App.json
+
+```json
+{
+  "expo": {
+    "name": "Mobile Flashcards",
+    "description": "This app allows you to create flashcard decks to test yourself with.",
+    "slug": "mobile-flashcards",
+    "privacy": "public",
+    "sdkVersion": "33.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "notification": {
+      "icon": "./assets/icon-48.png"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "io.jamespriest.mobileflashcards"
+    },
+    "android": {
+      "package": "io.jamespriest.mobileflashcards"
+    }
+  }
+}
+```
