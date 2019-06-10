@@ -175,14 +175,14 @@ export class Quiz_Android extends Component {
                 txtStyle={{ color: red }}
                 onPress={() => this.setState({ show: screen.ANSWER })}
               >
-                Answer
+                Show Answer
               </TextButton>
             ) : (
               <TextButton
                 txtStyle={{ color: red }}
                 onPress={() => this.setState({ show: screen.QUESTION })}
               >
-                Question
+                Show Question
               </TextButton>
             )}
             <View>
