@@ -122,6 +122,16 @@ export class Quiz_Android extends Component {
               txtStyle={{ color: textGray }}
               onPress={() => {
                 this.handleReset();
+                this.props.navigation.goBack();
+              }}
+            >
+              Back To Deck
+            </TouchButton>
+            <TouchButton
+              btnStyle={{ backgroundColor: gray, borderColor: textGray }}
+              txtStyle={{ color: textGray }}
+              onPress={() => {
+                this.handleReset();
                 this.props.navigation.navigate('Home');
               }}
             >

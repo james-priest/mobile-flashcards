@@ -467,7 +467,7 @@ export default createAppContainer(MainTabNavigator);
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, StatusBar } from 'react-native';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import AppNavigator from './navigation/AppNavigator';
 
 function FlashcardStatusBar({ backgroundColor, ...props }) {
@@ -619,7 +619,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 import reducer from './reducers/index';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import AppNavigator from './navigation/AppNavigator';
 
 const store = createStore(
@@ -1692,7 +1692,7 @@ export default withNavigation(connect(mapStateToProps)(Quiz_iOS));
 // Quiz.js
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import Quiz_Android from './Quiz_Android';
 import Quiz_iOS from './Quiz_iOS';
 
@@ -1963,3 +1963,122 @@ export async function resetDecks() {
 
 [![mfc34](assets/images/mfc34-small.jpg)](assets/images/mfc34.jpg)<br>
 <span class="center bold">Reset Data</span>
+
+## 7. Notifications
+### 7.1 Helpers file
+Next I add in the daily notification as a reminder to study.
+
+[![mfc35](assets/images/mfc35-small.jpg)](assets/images/mfc35.jpg)<br>
+<span class="center bold">Notification</span>
+
+```jsx
+// helpers.js
+import React from 'react';
+import { AsyncStorage } from 'react-native';
+import { Notifications } from 'expo';
+
+import * as Permissions from 'expo-permissions';
+
+const NOTIFICATION_KEY = 'MobileFlashcard:notifications';
+const CHANNEL_ID = 'DailyReminder';
+
+export function clearLocalNotification() {
+  return AsyncStorage.removeItem(NOTIFICATION_KEY).then(
+    Notifications.cancelAllScheduledNotificationsAsync
+  );
+}
+
+function createNotification() {
+  return {
+    title: 'Mobile Flashcards Reminder',
+    body: "👋 Don't forget to study for today!",
+    ios: {
+      sound: true
+    },
+    android: {
+      channelId: CHANNEL_ID,
+      sticky: false,
+      color: 'red'
+    }
+  };
+}
+
+function createChannel() {
+  return {
+    name: 'Daily Reminder',
+    description: 'This is a daily reminder for you to study your flashcards.',
+    sound: true,
+    priority: 'high'
+  };
+}
+
+export function setLocalNotification() {
+  AsyncStorage.getItem(NOTIFICATION_KEY)
+    .then(JSON.parse)
+    .then(data => {
+      if (data === null) {
+        Permissions.askAsync(Permissions.NOTIFICATIONS).then(({ status }) => {
+          if (status === 'granted') {
+            Notifications.createChannelAndroidAsync(CHANNEL_ID, createChannel())
+              .then(val => console.log('channel return:', val))
+              .then(() => {
+                Notifications.cancelAllScheduledNotificationsAsync();
+
+                const tomorrow = new Date();
+
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(20);
+                tomorrow.setMinutes(0);
+
+                Notifications.scheduleLocalNotificationAsync(
+                  createNotification(),
+                  {
+                    time: tomorrow,
+                    repeat: 'day'
+                  }
+                );
+
+                AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+              })
+              .catch(err => {
+                console.log('err', err);
+              });
+          }
+        });
+      }
+    });
+}
+```
+
+### 7.2 Set Notification
+The notification is first set in App.js
+
+```jsx
+// App.js
+import { setLocalNotification } from './utils/helpers';
+
+export default class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
+  ...
+}
+```
+
+### 7.3 Update Notification
+The notification is then set again for the next day at 8pm each time a quiz is taken.
+
+```jsx
+// Quiz.js
+import { setLocalNotification, clearLocalNotification } from '../utils/helpers';
+
+export class Quiz extends Component {
+  componentDidMount() {
+    clearLocalNotification().then(setLocalNotification);
+  }
+  ...
+}
+```
+
+[![mfc36](assets/images/mfc36-small.jpg)](assets/images/mfc36.jpg)<br>
+<span class="center bold">Notification Screen</span>

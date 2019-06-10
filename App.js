@@ -6,8 +6,9 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 import reducer from './reducers/index';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import AppNavigator from './navigation/AppNavigator';
+import { setLocalNotification } from './utils/helpers';
 
 const store = createStore(
   reducer /* preloadedState, */,
@@ -26,6 +27,9 @@ FlashcardStatusBar.propTypes = {
 };
 
 export default class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
   render() {
     return (
       <Provider store={store}>
