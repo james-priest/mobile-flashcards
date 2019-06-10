@@ -26,15 +26,6 @@ export class DeckDetail extends Component {
     removeDeckAS(id);
 
     navigation.goBack();
-    // navigation.navigate('Home');
-
-    // navigation.navigate(
-    //   'Home',
-    //   {},
-    //   NavigationActions.navigate({
-    //     routeName: 'Decks'
-    //   })
-    // );
   };
   render() {
     const { deck } = this.props;

@@ -26,8 +26,6 @@ export class AddDeck extends Component {
     addDeck(text);
     saveDeckTitleAS(text);
 
-    // navigation.navigate('DeckDetail', { title: text });
-
     const resetAction = StackActions.reset({
       index: 1,
       actions: [
