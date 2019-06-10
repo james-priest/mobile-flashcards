@@ -6,6 +6,7 @@ import { gray, green, white, textGray } from '../utils/colors';
 import { connect } from 'react-redux';
 import { addDeck } from '../actions/index';
 import { saveDeckTitleAS } from '../utils/api';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 export class AddDeck extends Component {
   static propTypes = {
@@ -25,8 +26,19 @@ export class AddDeck extends Component {
     addDeck(text);
     saveDeckTitleAS(text);
 
+    const resetAction = StackActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Home' }),
+        NavigationActions.navigate({
+          routeName: 'DeckDetail',
+          params: { title: text }
+        })
+      ]
+    });
+    navigation.dispatch(resetAction);
+
     this.setState(() => ({ text: '' }));
-    navigation.goBack();
   };
   render() {
     return (

@@ -8,6 +8,7 @@ import { gray, textGray, green, white, red } from '../utils/colors';
 import { connect } from 'react-redux';
 import { removeDeck } from '../actions/index';
 import { removeDeckAS } from '../utils/api';
+import { NavigationActions } from 'react-navigation';
 
 export class DeckDetail extends Component {
   static propTypes = {
@@ -23,6 +24,7 @@ export class DeckDetail extends Component {
 
     removeDeck(id);
     removeDeckAS(id);
+
     navigation.goBack();
   };
   render() {
