@@ -32,6 +32,7 @@
     },
     "android": {
       "package": "io.jamespriest.mobileflashcards"
-    }
+    },
+    "githubUrl": "https://github.com/james-priest/mobile-flashcards"
   }
 }
