@@ -43,8 +43,4 @@ This project has been tested on the following platforms:
 
 ## Screenshots
 
-![app](docs/assets/images/mfc23-small.jpg)
-
-![app](docs/assets/images/mfc27-small.jpg)
-
-![app](docs/assets/images/mfc33-small.jpg)
+![app](docs/assets/images/mfc38-small.jpg)
