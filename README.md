@@ -2,6 +2,8 @@
 
 Mobile Flashcards is a React Native app for iOS and Android that allows users to create decks, add cards and quiz themselves.
 
+![app](docs/assets/images/mfc38-small.jpg)
+
 It uses React Native, Expo, Redux, & React Navigation.
 
 This app is the third of three projects required for [Udacity's React Nanodegree program](https://www.udacity.com/course/react-nanodegree--nd019).
@@ -40,7 +42,3 @@ This project has been tested on the following platforms:
 
 - iOS 11+
 - Android 9+.
-
-## Screenshots
-
-![app](docs/assets/images/mfc38-small.jpg)
