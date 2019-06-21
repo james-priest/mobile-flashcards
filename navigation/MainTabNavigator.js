@@ -120,7 +120,6 @@ const MainNavigator = createStackNavigator(
           backgroundColor: lightGreen
         },
         headerTitleStyle: {
-          textAlign: 'center',
           justifyContent: 'center',
           textAlign: 'center'
         },
