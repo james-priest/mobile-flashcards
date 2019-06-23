@@ -1,15 +1,17 @@
 <!-- markdownlint-disable MD022 MD024 MD032 MD033 -->
 # Code Notes
 
-This site contains code notes for project 3 of my Udacity React Nanodegree project. Click the link below for more information on the course.
-- [Udacity's React Nanodegree Program](https://www.udacity.com/course/react-nanodegree--nd019)
+This site contains code notes for how I built project 3 of my [Udacity React Nanodegree Program]((https://www.udacity.com/course/react-nanodegree--nd019)).
 
-[![mfc2](assets/images/mfc2-small.jpg)](assets/images/mfc2.jpg)<br>
-<span class="center bold">App Mockup</span>
+[![mfc2](assets/images/mfc38-small.jpg)](assets/images/mfc38.jpg)<br>
+<span class="center bold">App Screenshots</span>
+
+- [Live Demo](https://expo.io/@james-priest/mobile-flashcards)
 
 ---
 
 ## 1. Project Requirements
+
 ### 1.1 Overview
 The assignment is to build a mobile flashcard app from scratch using React Native.
 
@@ -29,6 +31,10 @@ Here are the high-level requirements for this app.
 - Users should receive a notification to remind themselves to study if they haven't already for that day.
 
 ### 1.3 Views
+
+[![mfc2](assets/images/mfc2-small.jpg)](assets/images/mfc2.jpg)<br>
+<span class="center bold">App Mockup</span>
+
 The application should have five views. The Quiz View should change based on the data.
 
 [![mfc1](assets/images/mfc1-small.jpg)](assets/images/mfc1.jpg)<br>
