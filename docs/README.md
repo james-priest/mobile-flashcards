@@ -1,12 +1,14 @@
 <!-- markdownlint-disable MD022 MD024 MD032 MD033 -->
 # Code Notes
 
-This site contains code notes for how I built project 3 of my [Udacity React Nanodegree Program]((https://www.udacity.com/course/react-nanodegree--nd019)).
+| | |
+| --- | --- |
+| [Live Demo](https://expo.io/@james-priest/mobile-flashcards) | [GitHub Repo](https://github.com/james-priest/mobile-flashcards) |
 
 [![mfc2](assets/images/mfc38-small.jpg)](assets/images/mfc38.jpg)<br>
 <span class="center bold">App Screenshots</span>
 
-- [Live Demo](https://expo.io/@james-priest/mobile-flashcards)
+This site contains code notes for how I built project 3 of my [Udacity React Nanodegree Program]((https://www.udacity.com/course/react-nanodegree--nd019)).
 
 ---
 
