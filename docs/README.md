@@ -1,8 +1,6 @@
 <!-- markdownlint-disable MD022 MD024 MD032 MD033 -->
 # Code Notes
 
-| | |
-| --- | --- |
 | [Live Demo](https://expo.io/@james-priest/mobile-flashcards) | [GitHub Repo](https://github.com/james-priest/mobile-flashcards) |
 
 [![mfc2](assets/images/mfc38-small.jpg)](assets/images/mfc38.jpg)<br>
